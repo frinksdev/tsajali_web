@@ -1,0 +1,53 @@
+{% extends 'app_artesanos/base.html' %}
+
+{% block title %}Iniciar Sesión - Tsajali{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <p>Tu nombre de usuario y contraseña no coinciden. Por favor, intenta de nuevo.</p>
+                    </div>
+                {% endif %}
+
+                {% if next %}
+                    {% if user.is_authenticated %}
+                        <div class="alert alert-warning">
+                            <p>Tu cuenta no tiene acceso a esta página. Para proceder, por favor inicia sesión con una cuenta que tenga acceso.</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>Por favor inicia sesión para ver esta página.</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Nombre de Usuario</label>
+                        <input type="text" name="username" id="id_username" class="form-control" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Contraseña</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required>
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Iniciar Sesión</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p>¿No tienes una cuenta? <a href="{% url 'app_artesanos:registro_artesano' %}" class="text-decoration-none">Regístrate como Artesano</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

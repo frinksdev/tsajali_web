@@ -1,0 +1,67 @@
+{% extends 'app_artesanos/base.html' %}
+
+{% block title %}{{ artesano.nombre }} - Artesanías{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'app_artesanos:index' %}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'app_artesanos:catalogo_artesanos' %}">Catálogo</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ artesano.nombre }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ artesano.nombre }}</h2>
+                    <p class="card-text">
+                        <i class="bi bi-geo-alt"></i> {{ artesano.direccion }}
+                    </p>
+                    <p class="card-text">
+                        <i class="bi bi-envelope"></i> {{ artesano.email }}
+                    </p>
+                    <p class="card-text">
+                        <i class="bi bi-telephone"></i> {{ artesano.telefono }}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Registrado el {{ artesano.fecha_registro|date:"d/m/Y" }}</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3 class="mb-4">Artesanías Disponibles</h3>
+            <div class="row">
+                {% for artesania in artesanias %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            {% if artesania.foto %}
+                                <img src="{{ artesania.foto.url }}" class="card-img-top" alt="{{ artesania.nombre }}" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ artesania.nombre }}</h5>
+                                <p class="card-text">{{ artesania.descripcion|truncatechars:100 }}</p>
+                                <p class="card-text"><strong>Precio:</strong> ${{ artesania.precio }}</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <button class="btn btn-primary w-100">Contactar Artesano</button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <p class="text-center">Este artesano aún no tiene artesanías disponibles.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

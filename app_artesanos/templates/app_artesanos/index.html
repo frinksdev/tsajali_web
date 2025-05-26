@@ -1,0 +1,92 @@
+{% extends 'app_artesanos/base.html' %}
+
+{% block title %}Inicio - Ecommerce de Artesanías{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="p-5 text-center bg-light rounded-3">
+                <h1 class="display-4">Bienvenido a nuestra Plataforma de Artesanías</h1>
+                <p class="lead">Descubre el talento y la creatividad de nuestros artesanos locales</p>
+                {% if not user.is_authenticated %}
+                    <div class="mt-4">
+                        <a href="{% url 'app_artesanos:registro_artesano' %}" class="btn btn-primary btn-lg me-2">Registrarse como Artesano</a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Iniciar Sesión</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimos Artesanos Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Últimos Artesanos Registrados</h2>
+        </div>
+        {% for artesano in ultimos_artesanos %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ artesano.nombre }}</h5>
+                        <p class="card-text">
+                            <i class="bi bi-geo-alt"></i> {{ artesano.direccion|truncatechars:50 }}
+                        </p>
+                        <p class="card-text">
+                            <i class="bi bi-envelope"></i> {{ artesano.email }}
+                        </p>
+                        <p class="card-text">
+                            <i class="bi bi-telephone"></i> {{ artesano.telefono }}
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">Registrado el {{ artesano.fecha_registro|date:"d/m/Y" }}</small>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#" class="btn btn-outline-primary">Ver Artesanías</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center">Aún no hay artesanos registrados.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Características Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">¿Por qué unirte a nuestra plataforma?</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-shop display-4 mb-3 text-primary"></i>
+                    <h5 class="card-title">Exposición Global</h5>
+                    <p class="card-text">Llega a clientes de todo el mundo y muestra tus creaciones únicas.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up display-4 mb-3 text-primary"></i>
+                    <h5 class="card-title">Crecimiento de Negocio</h5>
+                    <p class="card-text">Amplía tu alcance y aumenta tus ventas con nuestra plataforma.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-people display-4 mb-3 text-primary"></i>
+                    <h5 class="card-title">Comunidad Artesanal</h5>
+                    <p class="card-text">Únete a una comunidad de artesanos apasionados y comparte experiencias.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
