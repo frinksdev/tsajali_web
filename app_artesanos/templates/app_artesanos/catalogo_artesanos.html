@@ -1,82 +1,110 @@
 {% extends 'app_artesanos/base.html' %}
 
-{% block title %}Catálogo de Artesanos{% endblock %}
+{% block title %}Catálogo de Artesanos - Tsajali{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="text-center mb-4">Catálogo de Artesanos</h1>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form class="d-flex" method="get">
-                        <input class="form-control me-2" type="search" name="q" placeholder="Buscar artesanos..." aria-label="Buscar">
-                        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+<section class="hero">
+    <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
+        <div class="flex flex-col gap-20 items-center py-20">
+            <div class="max-w-screenlg mx-auto text-center flex flex-col gap-5">
+                <h1 class="font-black text-2xl md:text-5xl pts !leading-[34px] md:!leading-[60px]">Catálogo de <br><span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">Artesanos</span>
+                </h1>
+                <div class="max-w-2xl mx-auto">
+                    <form class="flex gap-2" method="get">
+                        <input class="flex-1 rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" 
+                               type="search" 
+                               name="q" 
+                               placeholder="Buscar artesanos..." 
+                               aria-label="Buscar">
+                        <button class="inline-flex items-center rounded-full bg-blue-400 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500" 
+                                type="submit">
+                            Buscar
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="row">
-        {% for artesano in artesanos %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ artesano.nombre }}</h5>
-                        <p class="card-text">
-                            <i class="bi bi-geo-alt"></i> {{ artesano.direccion|truncatechars:50 }}
-                        </p>
-                        <p class="card-text">
-                            <i class="bi bi-envelope"></i> {{ artesano.email }}
-                        </p>
-                        <p class="card-text">
-                            <i class="bi bi-telephone"></i> {{ artesano.telefono }}
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">Registrado el {{ artesano.fecha_registro|date:"d/m/Y" }}</small>
-                        </p>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="{% url 'app_artesanos:detalle_artesano' artesano.pk %}" class="btn btn-primary w-100">Ver Artesanías</a>
-                    </div>
+<section id="articles">
+    <div class="w-full px-4 mx-auto max-w-7xl md:w-3/4 lg:w-2/4 py-10">
+        <div class="flex flex-col space-y-12 divide-y divide-white">
+            {% for artesano in artesanos %}
+                <div>
+                    <p class="pt-12 mb-3 text-sm font-normal text-gray-300">{{ artesano.fecha_registro|date:"d/m/Y" }}</p>
+                    <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-100 md:text-3xl">
+                        <a href="{% url 'app_artesanos:detalle_artesano' artesano.pk %}" class="text-white hover:underline">{{ artesano.nombre }}</a>
+                    </h2>
+                    <p class="mb-4 text-base font-normal text-gray-100">
+                        <span class="flex items-center gap-2 mb-2">
+                            <i class="bi bi-geo-alt"></i>
+                            {{ artesano.direccion|truncatechars:50 }}
+                        </span>
+                        <span class="flex items-center gap-2 mb-2">
+                            <i class="bi bi-envelope"></i>
+                            {{ artesano.email }}
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i class="bi bi-telephone"></i>
+                            {{ artesano.telefono }}
+                        </span>
+                    </p>
+                    <a href="{% url 'app_artesanos:detalle_artesano' artesano.pk %}" 
+                       class="inline-flex items-center rounded-full bg-blue-400 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">
+                        Ver Artesanías
+                    </a>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <p class="text-center">No se encontraron artesanos.</p>
-            </div>
-        {% endfor %}
-    </div>
+            {% empty %}
+                <div class="pt-12">
+                    <p class="text-center text-gray-300">No se encontraron artesanos.</p>
+                </div>
+            {% endfor %}
+        </div>
 
-    {% if artesanos.has_other_pages %}
-        <nav aria-label="Navegación de páginas" class="mt-4">
-            <ul class="pagination justify-content-center">
-                {% if artesanos.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ artesanos.previous_page_number }}" aria-label="Anterior">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-
-                {% for num in artesanos.paginator.page_range %}
-                    {% if artesanos.number == num %}
-                        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% if artesanos.has_other_pages %}
+            <nav class="mt-8" aria-label="Navegación de páginas">
+                <ul class="flex justify-center gap-2">
+                    {% if artesanos.has_previous %}
+                        <li>
+                            <a href="?page={{ artesanos.previous_page_number }}" 
+                               class="relative inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-white hover:bg-blue-400 hover:ring-blue-400"
+                               aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
                     {% endif %}
-                {% endfor %}
 
-                {% if artesanos.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ artesanos.next_page_number }}" aria-label="Siguiente">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-    {% endif %}
-</div>
+                    {% for num in artesanos.paginator.page_range %}
+                        {% if artesanos.number == num %}
+                            <li>
+                                <span class="relative inline-flex items-center rounded-full bg-blue-400 px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-blue-400">
+                                    {{ num }}
+                                </span>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="?page={{ num }}" 
+                                   class="relative inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-white hover:bg-blue-400 hover:ring-blue-400">
+                                    {{ num }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if artesanos.has_next %}
+                        <li>
+                            <a href="?page={{ artesanos.next_page_number }}" 
+                               class="relative inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-white hover:bg-blue-400 hover:ring-blue-400"
+                               aria-label="Siguiente">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</section>
 {% endblock %} 

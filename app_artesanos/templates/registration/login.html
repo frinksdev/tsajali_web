@@ -3,51 +3,114 @@
 {% block title %}Iniciar Sesión - Tsajali{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+<section class="hero">
+    <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
+        <div class="flex flex-col gap-20 items-center py-20">
+            <div class="max-w-screenlg mx-auto text-center flex flex-col gap-5">
+                <h1 class="font-black text-2xl md:text-5xl pts !leading-[34px] md:!leading-[60px]">Iniciar <br><span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">Sesión</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="articles">
+    <div class="w-full px-4 mx-auto max-w-7xl md:w-3/4 lg:w-2/4 py-10">
+        <div class="bg-blue-900 rounded-2xl py-8 px-4 sm:px-10">
+            {% if form.errors %}
+                <div class="rounded-md bg-red-900 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-exclamation-circle text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-200">Error de autenticación</h3>
+                            <div class="mt-2 text-sm text-red-200">
+                                <p>Tu nombre de usuario y contraseña no coinciden. Por favor, intenta de nuevo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if next %}
+                {% if user.is_authenticated %}
+                    <div class="rounded-md bg-yellow-900 p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-exclamation-triangle text-yellow-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-yellow-200">Acceso denegado</h3>
+                                <div class="mt-2 text-sm text-yellow-200">
+                                    <p>Tu cuenta no tiene acceso a esta página. Para proceder, por favor inicia sesión con una cuenta que tenga acceso.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="rounded-md bg-blue-800 p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-200">Acceso requerido</h3>
+                                <div class="mt-2 text-sm text-blue-200">
+                                    <p>Por favor inicia sesión para ver esta página.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <form class="space-y-6" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-white">Nombre de Usuario</label>
+                    <div class="mt-1">
+                        <input type="text" name="username" id="id_username" required autofocus
+                            class="block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-white">Contraseña</label>
+                    <div class="mt-1">
+                        <input type="password" name="password" id="id_password" required
+                            class="block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400">
+                    </div>
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}">
                 
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <p>Tu nombre de usuario y contraseña no coinciden. Por favor, intenta de nuevo.</p>
-                    </div>
-                {% endif %}
+                <div>
+                    <button type="submit" class="flex w-full justify-center rounded-full bg-blue-400 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">
+                        Iniciar Sesión
+                    </button>
+                </div>
+            </form>
 
-                {% if next %}
-                    {% if user.is_authenticated %}
-                        <div class="alert alert-warning">
-                            <p>Tu cuenta no tiene acceso a esta página. Para proceder, por favor inicia sesión con una cuenta que tenga acceso.</p>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            <p>Por favor inicia sesión para ver esta página.</p>
-                        </div>
-                    {% endif %}
-                {% endif %}
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-blue-800"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="bg-blue-900 px-2 text-gray-300">¿No tienes una cuenta?</span>
+                    </div>
+                </div>
 
-                <form method="post" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="id_username" class="form-label">Nombre de Usuario</label>
-                        <input type="text" name="username" id="id_username" class="form-control" required autofocus>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_password" class="form-label">Contraseña</label>
-                        <input type="password" name="password" id="id_password" class="form-control" required>
-                    </div>
-                    <input type="hidden" name="next" value="{{ next }}">
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Iniciar Sesión</button>
-                    </div>
-                </form>
-
-                <div class="text-center mt-4">
-                    <p>¿No tienes una cuenta? <a href="{% url 'app_artesanos:registro_artesano' %}" class="text-decoration-none">Regístrate como Artesano</a></p>
+                <div class="mt-6">
+                    <a href="{% url 'app_artesanos:registro_artesano' %}" 
+                       class="flex w-full justify-center rounded-full border-2 border-white px-4 py-2 text-sm font-semibold text-white hover:bg-blue-400 hover:border-blue-400">
+                        Regístrate como Artesano
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %} 

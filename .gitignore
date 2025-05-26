@@ -30,4 +30,7 @@ __pycache__/
 
 .venv/
 
+node_modules/
 
+static/css/output.css
+example.html

@@ -1,92 +1,93 @@
 {% extends 'app_artesanos/base.html' %}
 
-{% block title %}Inicio - Ecommerce de Artesanías{% endblock %}
+{% block title %}Inicio - Tsajali{% endblock %}
 
 {% block content %}
-<div class="container">
-    <!-- Hero Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="p-5 text-center bg-light rounded-3">
-                <h1 class="display-4">Bienvenido a nuestra Plataforma de Artesanías</h1>
-                <p class="lead">Descubre el talento y la creatividad de nuestros artesanos locales</p>
+<section class="hero">
+    <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
+        <div class="flex flex-col md:flex-row gap-20 items-center py-20">
+            <div class="max-w-screenlg mx-auto text-center flex flex-col gap-5">
+                <h1 class="font-black text-2xl md:text-5xl pts !leading-[34px] md:!leading-[60px]">Conoce a todos los <br><span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">artesanos</span>
+                    del Corredor interoceánico.</h1>
+                <p class="text-gray-200 text-lg mb-5 text-center">
+                    En Veracruz, el arte vive en los colores, texturas y formas de nuestras artesanías.<br/>
+                    Este proyecto cultural nace para reconocer y promover el trabajo de los artesanos locales, creando espacios donde su voz, su talento y sus productos sean valorados como lo que son: patrimonio vivo.
+                </p>
                 {% if not user.is_authenticated %}
-                    <div class="mt-4">
-                        <a href="{% url 'app_artesanos:registro_artesano' %}" class="btn btn-primary btn-lg me-2">Registrarse como Artesano</a>
-                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Iniciar Sesión</a>
+                    <div class="flex flex-col sm:flex-row mx-auto gap-5 mt-5">
+                        <a href="{% url 'app_artesanos:registro_artesano' %}" 
+                           class="border-2 p-2 px-4 rounded-full text-white hover:bg-blue-400 hover:border-blue-400">
+                            Registrarse como Artesano
+                        </a>
+                        <a href="{% url 'login' %}" 
+                           class="rounded-full bg-blue-400 text-white p-2 px-4 cursor-pointer">
+                            Iniciar Sesión
+                        </a>
                     </div>
                 {% endif %}
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Últimos Artesanos Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="text-center mb-4">Últimos Artesanos Registrados</h2>
+<section id="articles">
+    <div class="w-full px-4 mx-auto max-w-7xl md:w-3/4 lg:w-2/4 py-10">
+        <div class="mb-5 text-left md:text-center">
+            <h2 class="text-5xl font-extrabold leading-tight text-white pts">Últimos Artesanos Registrados</h2>
         </div>
-        {% for artesano in ultimos_artesanos %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ artesano.nombre }}</h5>
-                        <p class="card-text">
-                            <i class="bi bi-geo-alt"></i> {{ artesano.direccion|truncatechars:50 }}
-                        </p>
-                        <p class="card-text">
-                            <i class="bi bi-envelope"></i> {{ artesano.email }}
-                        </p>
-                        <p class="card-text">
-                            <i class="bi bi-telephone"></i> {{ artesano.telefono }}
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">Registrado el {{ artesano.fecha_registro|date:"d/m/Y" }}</small>
-                        </p>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="#" class="btn btn-outline-primary">Ver Artesanías</a>
-                    </div>
+        <div class="flex flex-col space-y-12 divide-y divide-white">
+            {% for artesano in ultimos_artesanos %}
+                <div>
+                    <p class="pt-12 mb-3 text-sm font-normal text-gray-300">{{ artesano.fecha_registro|date:"d/m/Y" }}</p>
+                    <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-100 md:text-3xl">
+                        <a href="#" class="text-white hover:underline">{{ artesano.nombre }}</a>
+                    </h2>
+                    <p class="mb-4 text-base font-normal text-gray-100">
+                        <span class="flex items-center gap-2 mb-2">
+                            <i class="bi bi-geo-alt"></i>
+                            {{ artesano.direccion|truncatechars:50 }}
+                        </span>
+                        <span class="flex items-center gap-2 mb-2">
+                            <i class="bi bi-envelope"></i>
+                            {{ artesano.email }}
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i class="bi bi-telephone"></i>
+                            {{ artesano.telefono }}
+                        </span>
+                    </p>
+                    <a href="#" class="btn btn-light btn-sm hover:underline">Ver Artesanías</a>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <p class="text-center">Aún no hay artesanos registrados.</p>
-            </div>
-        {% endfor %}
-    </div>
+            {% empty %}
+                <div class="pt-12">
+                    <p class="text-center text-gray-300">Aún no hay artesanos registrados.</p>
+                </div>
+            {% endfor %}
+        </div>
 
-    <!-- Características Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="text-center mb-4">¿Por qué unirte a nuestra plataforma?</h2>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="bi bi-shop display-4 mb-3 text-primary"></i>
-                    <h5 class="card-title">Exposición Global</h5>
-                    <p class="card-text">Llega a clientes de todo el mundo y muestra tus creaciones únicas.</p>
+        <div class="py-5 mx-auto text-center flex flex-col gap-5 bg-blue-900 mt-10 rounded-2xl">
+            <h2 class="text-2xl font-extrabold leading-tight text-white pts">
+                ¿Por qué unirte a nuestra plataforma?
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+                <div class="p-6 text-center">
+                    <i class="bi bi-shop text-5xl text-blue-400 mb-4"></i>
+                    <h5 class="text-lg font-semibold text-white mb-2">Exposición Global</h5>
+                    <p class="text-gray-200">Llega a clientes de todo el mundo y muestra tus creaciones únicas.</p>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="bi bi-graph-up display-4 mb-3 text-primary"></i>
-                    <h5 class="card-title">Crecimiento de Negocio</h5>
-                    <p class="card-text">Amplía tu alcance y aumenta tus ventas con nuestra plataforma.</p>
+                <div class="p-6 text-center">
+                    <i class="bi bi-graph-up text-5xl text-blue-400 mb-4"></i>
+                    <h5 class="text-lg font-semibold text-white mb-2">Crecimiento de Negocio</h5>
+                    <p class="text-gray-200">Amplía tu alcance y aumenta tus ventas con nuestra plataforma.</p>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="bi bi-people display-4 mb-3 text-primary"></i>
-                    <h5 class="card-title">Comunidad Artesanal</h5>
-                    <p class="card-text">Únete a una comunidad de artesanos apasionados y comparte experiencias.</p>
+                <div class="p-6 text-center">
+                    <i class="bi bi-people text-5xl text-blue-400 mb-4"></i>
+                    <h5 class="text-lg font-semibold text-white mb-2">Comunidad Artesanal</h5>
+                    <p class="text-gray-200">Únete a una comunidad de artesanos apasionados y comparte experiencias.</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %} 

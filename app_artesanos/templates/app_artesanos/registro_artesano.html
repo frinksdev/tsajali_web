@@ -1,96 +1,143 @@
 {% extends 'app_artesanos/base.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Registro de Artesano - Tsajali{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-4">Registro de Artesano</h2>
-                
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <p>Por favor, corrige los siguientes errores:</p>
-                        <ul>
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li>{{ field.label }}: {{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
+<section class="hero">
+    <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
+        <div class="flex flex-col gap-20 items-center py-20">
+            <div class="max-w-screenlg mx-auto text-center flex flex-col gap-5">
+                <h1 class="font-black text-2xl md:text-5xl pts !leading-[34px] md:!leading-[60px]">Registro de <br><span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">Artesano</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="articles">
+    <div class="w-full px-4 mx-auto max-w-7xl md:w-3/4 lg:w-2/4 py-10">
+        <div class="bg-blue-900 rounded-2xl py-8 px-4 sm:px-10">
+            {% if form.errors %}
+                <div class="rounded-md bg-red-900 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-exclamation-circle text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-200">Por favor, corrige los siguientes errores:</h3>
+                            <div class="mt-2 text-sm text-red-200">
+                                <ul class="list-disc space-y-1 pl-5">
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <li>{{ field.label }}: {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
+                </div>
+            {% endif %}
 
-                <form method="post">
-                    {% csrf_token %}
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Nombre de usuario</label>
-                        {{ form.username }}
-                        {% if form.username.help_text %}
-                            <div class="form-text">{{ form.username.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-white">Nombre de usuario</label>
+                    <div class="mt-1">
+                        {{ form.username|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.username.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.username.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.password1.id_for_label }}" class="form-label">Contraseña</label>
-                        {{ form.password1 }}
-                        {% if form.password1.help_text %}
-                            <div class="form-text">{{ form.password1.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-white">Contraseña</label>
+                    <div class="mt-1">
+                        {{ form.password1|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.password1.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.password1.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmar contraseña</label>
-                        {{ form.password2 }}
-                        {% if form.password2.help_text %}
-                            <div class="form-text">{{ form.password2.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-white">Confirmar contraseña</label>
+                    <div class="mt-1">
+                        {{ form.password2|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.password2.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.password2.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre Completo</label>
-                        {{ form.nombre }}
-                        {% if form.nombre.help_text %}
-                            <div class="form-text">{{ form.nombre.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.nombre.id_for_label }}" class="block text-sm font-medium text-white">Nombre Completo</label>
+                    <div class="mt-1">
+                        {{ form.nombre|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.nombre.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.nombre.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.direccion.id_for_label }}" class="form-label">Dirección</label>
-                        {{ form.direccion }}
-                        {% if form.direccion.help_text %}
-                            <div class="form-text">{{ form.direccion.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.direccion.id_for_label }}" class="block text-sm font-medium text-white">Dirección</label>
+                    <div class="mt-1">
+                        {{ form.direccion|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.direccion.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.direccion.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.telefono.id_for_label }}" class="form-label">Teléfono</label>
-                        {{ form.telefono }}
-                        {% if form.telefono.help_text %}
-                            <div class="form-text">{{ form.telefono.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.telefono.id_for_label }}" class="block text-sm font-medium text-white">Teléfono</label>
+                    <div class="mt-1">
+                        {{ form.telefono|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.telefono.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.telefono.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Correo Electrónico</label>
-                        {{ form.email }}
-                        {% if form.email.help_text %}
-                            <div class="form-text">{{ form.email.help_text }}</div>
-                        {% endif %}
+                <div>
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-white">Correo Electrónico</label>
+                    <div class="mt-1">
+                        {{ form.email|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
                     </div>
+                    {% if form.email.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.email.help_text }}</p>
+                    {% endif %}
+                </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Registrarse</button>
+                <div>
+                    <button type="submit" class="flex w-full justify-center rounded-full bg-blue-400 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">
+                        Registrarse
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-blue-800"></div>
                     </div>
-                </form>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="bg-blue-900 px-2 text-gray-300">¿Ya tienes una cuenta?</span>
+                    </div>
+                </div>
 
-                <div class="text-center mt-4">
-                    <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}" class="text-decoration-none">Inicia Sesión</a></p>
+                <div class="mt-6">
+                    <a href="{% url 'login' %}" class="flex w-full justify-center rounded-full border-2 border-white px-4 py-2 text-sm font-semibold text-white hover:bg-blue-400 hover:border-blue-400">
+                        Iniciar Sesión
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}

@@ -1,52 +1,123 @@
 {% extends 'app_artesanos/base.html' %}
 
-{% block title %}Perfil de Artesano{% endblock %}
+{% block title %}Perfil de Artesano - Tsajali{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3>Información Personal</h3>
-            </div>
-            <div class="card-body">
-                <p><strong>Nombre:</strong> {{ artesano.nombre }}</p>
-                <p><strong>Email:</strong> {{ artesano.email }}</p>
-                <p><strong>Teléfono:</strong> {{ artesano.telefono }}</p>
-                <p><strong>Dirección:</strong> {{ artesano.direccion }}</p>
-                <a href="{% url 'app_artesanos:agregar_artesania' %}" class="btn btn-primary">Agregar Nueva Artesanía</a>
+<section class="hero bg-gradient-to-b from-blue-900 to-blue-800">
+    <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
+        <div class="flex flex-col gap-10 items-center py-12">
+            <div class="max-w-screenlg mx-auto text-center flex flex-col gap-5">
+                <h1 class="font-black text-3xl md:text-6xl pts !leading-[40px] md:!leading-[70px]">Mi <br><span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">Perfil</span>
+                </h1>
             </div>
         </div>
     </div>
-    
-    <div class="col-md-8">
-        <h3>Mis Artesanías</h3>
-        <div class="row">
-            {% for artesania in artesanias %}
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        {% if artesania.foto %}
-                            <img src="{{ artesania.foto.url }}" class="card-img-top" alt="{{ artesania.nombre }}">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ artesania.nombre }}</h5>
-                            <p class="card-text">{{ artesania.descripcion }}</p>
-                            <p class="card-text"><strong>Precio:</strong> ${{ artesania.precio }}</p>
-                            <div class="d-flex justify-content-between">
-                                <a href="{% url 'app_artesanos:editar_artesania' artesania.pk %}" class="btn btn-warning">Editar</a>
-                                <span class="badge {% if artesania.disponible %}bg-success{% else %}bg-danger{% endif %}">
-                                    {{ artesania.disponible|yesno:"Disponible,No disponible" }}
-                                </span>
+</section>
+
+<section id="articles" class="bg-gray-900">
+    <div class="w-full px-4 mx-auto max-w-7xl py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Panel de Información Personal -->
+            <div class="lg:col-span-1">
+                <div class="bg-blue-900 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div class="px-6 py-4 border-b border-blue-800">
+                        <h3 class="text-xl font-semibold text-white flex items-center gap-2">
+                            <i class="bi bi-person-circle"></i>
+                            Información Personal
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-person text-blue-400"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-300">Nombre</p>
+                                <p class="mt-1 text-white text-lg">{{ artesano.nombre }}</p>
                             </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-envelope text-blue-400"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-300">Email</p>
+                                <p class="mt-1 text-white text-lg">{{ artesano.email }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-telephone text-blue-400"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-300">Teléfono</p>
+                                <p class="mt-1 text-white text-lg">{{ artesano.telefono }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-geo-alt text-blue-400"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-300">Dirección</p>
+                                <p class="mt-1 text-white text-lg">{{ artesano.direccion }}</p>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            <a href="{% url 'app_artesanos:agregar_artesania' %}" 
+                               class="w-full flex justify-center items-center gap-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 px-6 py-3 text-base font-semibold text-white hover:from-blue-500 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                <i class="bi bi-plus-circle"></i>
+                                Agregar Nueva Artesanía
+                            </a>
                         </div>
                     </div>
                 </div>
-            {% empty %}
-                <div class="col-12">
-                    <p class="text-center">No tienes artesanías registradas aún.</p>
+            </div>
+            
+            <!-- Panel de Artesanías -->
+            <div class="lg:col-span-2">
+                <div class="bg-blue-900 rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-2xl font-extrabold leading-tight text-white pts mb-8 flex items-center gap-2">
+                        <i class="bi bi-bag-heart"></i>
+                        Mis Artesanías
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for artesania in artesanias %}
+                            <div class="bg-blue-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                                {% if artesania.foto %}
+                                    <div class="relative h-48 overflow-hidden">
+                                        <img src="{{ artesania.foto.url }}" 
+                                             class="w-full h-full object-cover transition-transform duration-300 hover:scale-110" 
+                                             alt="{{ artesania.nombre }}">
+                                    </div>
+                                {% endif %}
+                                <div class="p-6">
+                                    <h5 class="text-xl font-semibold text-white mb-3">{{ artesania.nombre }}</h5>
+                                    <p class="text-gray-200 mb-4 line-clamp-2">{{ artesania.descripcion }}</p>
+                                    <p class="text-white font-medium mb-4 text-lg">${{ artesania.precio }}</p>
+                                    <div class="flex items-center justify-between">
+                                        <a href="{% url 'app_artesanos:editar_artesania' artesania.pk %}" 
+                                           class="inline-flex items-center gap-2 rounded-full bg-yellow-400 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-500 transition-colors duration-300">
+                                            <i class="bi bi-pencil"></i>
+                                            Editar
+                                        </a>
+                                        <span class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium {% if artesania.disponible %}bg-green-400 text-white{% else %}bg-red-400 text-white{% endif %}">
+                                            <i class="bi {% if artesania.disponible %}bi-check-circle{% else %}bi-x-circle{% endif %}"></i>
+                                            {{ artesania.disponible|yesno:"Disponible,No disponible" }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-span-full">
+                                <div class="text-center py-12">
+                                    <i class="bi bi-bag-x text-5xl text-gray-400 mb-4"></i>
+                                    <p class="text-xl text-gray-300">No tienes artesanías registradas aún.</p>
+                                    <a href="{% url 'app_artesanos:agregar_artesania' %}" 
+                                       class="inline-flex items-center gap-2 mt-4 rounded-full bg-blue-400 px-6 py-3 text-base font-semibold text-white hover:bg-blue-500 transition-colors duration-300">
+                                        <i class="bi bi-plus-circle"></i>
+                                        Agregar tu primera artesanía
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %} 
