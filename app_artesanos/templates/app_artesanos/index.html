@@ -2,6 +2,32 @@
 
 {% block title %}Inicio - Tsajali{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    #mapa-artesanos {
+        width: 100%;
+        height: 16rem; /* h-64 por defecto */
+        border-radius: 1rem;
+        margin: 2rem 0;
+        max-width: 100vw;
+        transition: height 0.3s;
+    }
+    @media (min-width: 768px) { /* md */
+        #mapa-artesanos {
+            height: 24rem; /* h-96 */
+            max-width: 700px;
+        }
+    }
+    @media (min-width: 1024px) { /* lg */
+        #mapa-artesanos {
+            height: 32rem; /* h-[500px] aprox */
+            max-width: 900px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="hero">
     <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
@@ -32,39 +58,12 @@
 </section>
 
 <section id="articles">
-    <div class="w-full px-4 mx-auto max-w-7xl md:w-3/4 lg:w-2/4 py-10">
+    <div class="w-full px-4 mx-auto max-w-7xl md:w-3/4 lg:w-3/4 py-10">
         <div class="mb-5 text-left md:text-center">
             <h2 class="text-5xl font-extrabold leading-tight text-white pts">Últimos Artesanos Registrados</h2>
         </div>
-        <div class="flex flex-col space-y-12 divide-y divide-white">
-            {% for artesano in ultimos_artesanos %}
-                <div>
-                    <p class="pt-12 mb-3 text-sm font-normal text-gray-300">{{ artesano.fecha_registro|date:"d/m/Y" }}</p>
-                    <h2 class="mb-2 text-xl font-extrabold leading-snug tracking-tight text-gray-100 md:text-3xl">
-                        <a href="#" class="text-white hover:underline">{{ artesano.nombre }}</a>
-                    </h2>
-                    <p class="mb-4 text-base font-normal text-gray-100">
-                        <span class="flex items-center gap-2 mb-2">
-                            <i class="bi bi-geo-alt"></i>
-                            {{ artesano.direccion|truncatechars:50 }}
-                        </span>
-                        <span class="flex items-center gap-2 mb-2">
-                            <i class="bi bi-envelope"></i>
-                            {{ artesano.email }}
-                        </span>
-                        <span class="flex items-center gap-2">
-                            <i class="bi bi-telephone"></i>
-                            {{ artesano.telefono }}
-                        </span>
-                    </p>
-                    <a href="#" class="btn btn-light btn-sm hover:underline">Ver Artesanías</a>
-                </div>
-            {% empty %}
-                <div class="pt-12">
-                    <p class="text-center text-gray-300">Aún no hay artesanos registrados.</p>
-                </div>
-            {% endfor %}
-        </div>
+
+        <div id="mapa-artesanos"></div>
 
         <div class="py-5 mx-auto text-center flex flex-col gap-5 bg-blue-900 mt-10 rounded-2xl">
             <h2 class="text-2xl font-extrabold leading-tight text-white pts">
@@ -90,4 +89,28 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el mapa centrado en Veracruz
+        const mapa = L.map('mapa-artesanos').setView([17.9159315, -94.9305694], 10);
+        
+        // Agregar capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mapa);
+
+        // Agregar marcadores para cada artesano
+        {% for artesano in ultimos_artesanos %}
+            {% if artesano.latitud and artesano.longitud %}
+                L.marker([{{ artesano.latitud }}, {{ artesano.longitud }}])
+                    .bindPopup('<strong>{{ artesano.nombre }}</strong><br><a href="{% url "app_artesanos:detalle_artesano" artesano.pk %}">Ver Artesanías</a>')
+                    .addTo(mapa);
+            {% endif %}
+        {% endfor %}
+    });
+</script>
 {% endblock %} 

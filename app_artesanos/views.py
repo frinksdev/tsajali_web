@@ -6,6 +6,8 @@ from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from .models import Artesano, Artesania
 from .forms import RegistroArtesanoForm, ArtesaniaForm
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
 def index(request):
     ultimos_artesanos = Artesano.objects.all().order_by('-fecha_registro')[:6]
@@ -17,26 +19,56 @@ def registro_artesano(request):
     if request.method == 'POST':
         form = RegistroArtesanoForm(request.POST)
         if form.is_valid():
-            # Crear usuario
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
-                email=form.cleaned_data['email']
-            )
-            # Crear artesano asociado
-            artesano = Artesano.objects.create(
-                usuario=user,
-                nombre=form.cleaned_data['nombre'],
-                direccion=form.cleaned_data['direccion'],
-                telefono=form.cleaned_data['telefono'],
-                email=form.cleaned_data['email']
-            )
-            # Autenticar y loguear
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
-            if user is not None:
-                login(request, user)
-                messages.success(request, '¡Registro exitoso!')
-                return redirect('app_artesanos:perfil_artesano')
+            try:
+                # Geocodificar la dirección
+                geolocator = Nominatim(user_agent="tsajali_app")
+                direccion_completa = f"{form.cleaned_data['direccion']}, Veracruz, México"
+                location = geolocator.geocode(direccion_completa)
+                
+                # Crear usuario
+                user = User.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    password=form.cleaned_data['password1'],
+                    email=form.cleaned_data['email']
+                )
+                
+                # Crear artesano asociado
+                artesano = Artesano.objects.create(
+                    usuario=user,
+                    nombre=form.cleaned_data['nombre'],
+                    direccion=form.cleaned_data['direccion'],
+                    telefono=form.cleaned_data['telefono'],
+                    email=form.cleaned_data['email'],
+                    latitud=location.latitude if location else None,
+                    longitud=location.longitude if location else None
+                )
+                
+                # Autenticar y loguear
+                user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, '¡Registro exitoso!')
+                    return redirect('app_artesanos:perfil_artesano')
+            except (GeocoderTimedOut, GeocoderUnavailable) as e:
+                messages.warning(request, 'No se pudo obtener la ubicación exacta. Por favor, verifica tu dirección.')
+                # Crear el usuario y artesano sin coordenadas
+                user = User.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    password=form.cleaned_data['password1'],
+                    email=form.cleaned_data['email']
+                )
+                artesano = Artesano.objects.create(
+                    usuario=user,
+                    nombre=form.cleaned_data['nombre'],
+                    direccion=form.cleaned_data['direccion'],
+                    telefono=form.cleaned_data['telefono'],
+                    email=form.cleaned_data['email']
+                )
+                user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, '¡Registro exitoso!')
+                    return redirect('app_artesanos:perfil_artesano')
     else:
         form = RegistroArtesanoForm()
     return render(request, 'app_artesanos/registro_artesano.html', {'form': form})
@@ -69,16 +101,40 @@ def agregar_artesania(request):
 
 @login_required
 def editar_artesania(request, pk):
-    artesania = get_object_or_404(Artesania, pk=pk, artesano__usuario=request.user)
-    if request.method == 'POST':
-        form = ArtesaniaForm(request.POST, request.FILES, instance=artesania)
-        if form.is_valid():
-            form.save()
-            messages.success(request, '¡Artesanía actualizada exitosamente!')
-            return redirect('perfil_artesano')
-    else:
-        form = ArtesaniaForm(instance=artesania)
-    return render(request, 'app_artesanos/editar_artesania.html', {'form': form})
+    try:
+        artesania = get_object_or_404(Artesania, pk=pk, artesano__usuario=request.user)
+        if request.method == 'POST':
+            form = ArtesaniaForm(request.POST, request.FILES, instance=artesania)
+            if form.is_valid():
+                form.save()
+                messages.success(request, '¡Artesanía actualizada exitosamente!')
+                return redirect('app_artesanos:perfil_artesano')
+            else:
+                messages.error(request, 'Por favor, corrige los errores en el formulario.')
+        else:
+            form = ArtesaniaForm(instance=artesania)
+        return render(request, 'app_artesanos/agregar_artesania.html', {
+            'form': form,
+            'artesania': artesania
+        })
+    except Exception as e:
+        messages.error(request, 'Ocurrió un error al editar la artesanía. Por favor, intenta de nuevo.')
+        return redirect('app_artesanos:perfil_artesano')
+
+@login_required
+def eliminar_artesania(request, pk):
+    try:
+        artesania = get_object_or_404(Artesania, pk=pk, artesano__usuario=request.user)
+        if request.method == 'POST':
+            artesania.delete()
+            messages.success(request, '¡Artesanía eliminada exitosamente!')
+            return redirect('app_artesanos:perfil_artesano')
+        return render(request, 'app_artesanos/eliminar_artesania.html', {
+            'artesania': artesania
+        })
+    except Exception as e:
+        messages.error(request, 'Ocurrió un error al eliminar la artesanía. Por favor, intenta de nuevo.')
+        return redirect('app_artesanos:perfil_artesano')
 
 def catalogo_artesanos(request):
     artesanos_list = Artesano.objects.all().order_by('nombre')

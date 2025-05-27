@@ -11,4 +11,5 @@ urlpatterns = [
     path('perfil/', views.perfil_artesano, name='perfil_artesano'),
     path('agregar-artesania/', views.agregar_artesania, name='agregar_artesania'),
     path('editar-artesania/<int:pk>/', views.editar_artesania, name='editar_artesania'),
+    path('eliminar-artesania/<int:pk>/', views.eliminar_artesania, name='eliminar_artesania'),
 ] 

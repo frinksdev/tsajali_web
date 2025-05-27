@@ -69,8 +69,42 @@ class ArtesaniaForm(forms.ModelForm):
         model = Artesania
         fields = ['nombre', 'descripcion', 'precio', 'foto']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'precio': forms.NumberInput(attrs={'class': 'form-control'}),
-            'foto': forms.FileInput(attrs={'class': 'form-control'}),
-        } 
+            'nombre': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nombre de la artesanía'
+            }),
+            'descripcion': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Describe tu artesanía, materiales, técnicas utilizadas, etc.'
+            }),
+            'precio': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0.00',
+                'min': '0',
+                'step': '0.01'
+            }),
+            'foto': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+        }
+        help_texts = {
+            'nombre': 'Ingresa un nombre descriptivo para tu artesanía',
+            'descripcion': 'Describe los detalles de tu artesanía, incluyendo materiales y técnicas',
+            'precio': 'Ingresa el precio en pesos mexicanos',
+            'foto': 'Sube una foto de alta calidad de tu artesanía'
+        }
+
+    def clean_precio(self):
+        precio = self.cleaned_data.get('precio')
+        if precio <= 0:
+            raise forms.ValidationError('El precio debe ser mayor a 0')
+        return precio
+
+    def clean_foto(self):
+        foto = self.cleaned_data.get('foto')
+        if foto:
+            if foto.size > 5 * 1024 * 1024:  # 5MB
+                raise forms.ValidationError('La imagen no debe superar los 5MB')
+        return foto 
