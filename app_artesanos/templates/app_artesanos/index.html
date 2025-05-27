@@ -1,4 +1,5 @@
 {% extends 'app_artesanos/base.html' %}
+{% load static %}
 
 {% block title %}Inicio - Tsajali{% endblock %}
 
@@ -33,6 +34,7 @@
     <div class="mx-auto sm:px-7 px-4 max-w-screen-xl py-10">
         <div class="flex flex-col md:flex-row gap-20 items-center py-20">
             <div class="max-w-screenlg mx-auto text-center flex flex-col gap-5">
+                <img src="{% static 'img/tsajali_logo.png' %}" alt="Logo de Tsajali" class="max-w-80 mx-auto mb-5">
                 <h1 class="font-black text-2xl md:text-5xl pts !leading-[34px] md:!leading-[60px]">Conoce a todos los <br><span
                         class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">artesanos</span>
                     del Corredor interoceánico.</h1>
@@ -67,23 +69,26 @@
 
         <div class="py-5 mx-auto text-center flex flex-col gap-5 bg-blue-900 mt-10 rounded-2xl">
             <h2 class="text-2xl font-extrabold leading-tight text-white pts">
-                ¿Por qué unirte a nuestra plataforma?
+                Nuestra Misión y Visión
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
                 <div class="p-6 text-center">
-                    <i class="bi bi-shop text-5xl text-blue-400 mb-4"></i>
-                    <h5 class="text-lg font-semibold text-white mb-2">Exposición Global</h5>
-                    <p class="text-gray-200">Llega a clientes de todo el mundo y muestra tus creaciones únicas.</p>
+                    <i class="bi bi-list-nested text-5xl text-blue-400 mb-4"></i>
+                    <h5 class="text-lg font-semibold text-white mb-2">MISIÓN</h5>
+                    <p class="text-gray-200">
+                        Ser una empresa que revaloriza el trabajo artesanal del sur de Veracruz mediante una plataforma digital. A través de empaques atractivos,destacamos la calidad
+de cada pieza como parte del patrimonio cultural vivo de Veracruz.
+                    </p>
                 </div>
                 <div class="p-6 text-center">
-                    <i class="bi bi-graph-up text-5xl text-blue-400 mb-4"></i>
-                    <h5 class="text-lg font-semibold text-white mb-2">Crecimiento de Negocio</h5>
-                    <p class="text-gray-200">Amplía tu alcance y aumenta tus ventas con nuestra plataforma.</p>
-                </div>
-                <div class="p-6 text-center">
-                    <i class="bi bi-people text-5xl text-blue-400 mb-4"></i>
-                    <h5 class="text-lg font-semibold text-white mb-2">Comunidad Artesanal</h5>
-                    <p class="text-gray-200">Únete a una comunidad de artesanos apasionados y comparte experiencias.</p>
+                    <i class="bi bi-binoculars text-5xl text-blue-400 mb-4"></i>
+                    <h5 class="text-lg font-semibold text-white mb-2">VISIÓN</h5>
+                    <p class="text-gray-200">
+                        Aspiramos a ser la plataforma digital líder en la promocion
+y comercialización de artesanías. Nuestro objetivo es que cada
+compra sea un apoyo directo al talento local, preservando nuestras tradiciones y fomentando
+el comercio justo.
+                    </p>
                 </div>
             </div>
         </div>
@@ -96,7 +101,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Inicializar el mapa centrado en Veracruz
-        const mapa = L.map('mapa-artesanos').setView([17.9159315, -94.9305694], 10);
+        const mapa = L.map('mapa-artesanos').setView([17.9159315, -94.9305694], 7);
         
         // Agregar capa de OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
