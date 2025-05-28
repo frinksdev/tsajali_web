@@ -85,6 +85,16 @@
                 </div>
 
                 <div>
+                    <label for="{{ form.nombre_negocio.id_for_label }}" class="block text-sm font-medium text-white">Nombre del Negocio</label>
+                    <div class="mt-1">
+                        {{ form.nombre_negocio|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}
+                    </div>
+                    {% if form.nombre_negocio.help_text %}
+                        <p class="mt-2 text-sm text-gray-300">{{ form.nombre_negocio.help_text }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
                     <label for="{{ form.direccion.id_for_label }}" class="block text-sm font-medium text-white">Dirección</label>
                     <div class="mt-1">
                         {{ form.direccion|add_class:"block w-full rounded-full border-2 border-white bg-transparent text-white placeholder:text-gray-300 py-2 px-4 focus:ring-2 focus:ring-inset focus:ring-blue-400" }}

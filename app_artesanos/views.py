@@ -29,16 +29,17 @@ def registro_artesano(request):
                 user = User.objects.create_user(
                     username=form.cleaned_data['username'],
                     password=form.cleaned_data['password1'],
-                    email=form.cleaned_data['email']
+                    email=form.cleaned_data.get('email', '')
                 )
                 
                 # Crear artesano asociado
                 artesano = Artesano.objects.create(
                     usuario=user,
                     nombre=form.cleaned_data['nombre'],
+                    nombre_negocio=form.cleaned_data.get('nombre_negocio'),
                     direccion=form.cleaned_data['direccion'],
                     telefono=form.cleaned_data['telefono'],
-                    email=form.cleaned_data['email'],
+                    email=form.cleaned_data.get('email'),
                     latitud=location.latitude if location else None,
                     longitud=location.longitude if location else None
                 )
@@ -55,14 +56,15 @@ def registro_artesano(request):
                 user = User.objects.create_user(
                     username=form.cleaned_data['username'],
                     password=form.cleaned_data['password1'],
-                    email=form.cleaned_data['email']
+                    email=form.cleaned_data.get('email', '')
                 )
                 artesano = Artesano.objects.create(
                     usuario=user,
                     nombre=form.cleaned_data['nombre'],
+                    nombre_negocio=form.cleaned_data.get('nombre_negocio'),
                     direccion=form.cleaned_data['direccion'],
                     telefono=form.cleaned_data['telefono'],
-                    email=form.cleaned_data['email']
+                    email=form.cleaned_data.get('email')
                 )
                 user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
                 if user is not None:

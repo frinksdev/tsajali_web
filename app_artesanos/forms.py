@@ -25,6 +25,12 @@ class RegistroArtesanoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa tu nombre completo'}),
         help_text='Ingresa tu nombre completo como aparecerá en tu perfil'
     )
+    nombre_negocio = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa el nombre de tu negocio'}),
+        help_text='Ingresa el nombre de tu negocio o taller (opcional)'
+    )
     direccion = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Ingresa tu dirección completa'}),
         help_text='Incluye calle, número, colonia, ciudad y estado'
@@ -36,13 +42,14 @@ class RegistroArtesanoForm(forms.ModelForm):
         help_text='Ingresa tu número con código de país y área'
     )
     email = forms.EmailField(
+        required=False,
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ejemplo@correo.com'}),
-        help_text='Usaremos este correo para contactarte'
+        help_text='Usaremos este correo para contactarte (opcional)'
     )
 
     class Meta:
         model = Artesano
-        fields = ['username', 'password1', 'password2', 'nombre', 'direccion', 'telefono', 'email']
+        fields = ['username', 'password1', 'password2', 'nombre', 'nombre_negocio', 'direccion', 'telefono', 'email']
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -52,8 +59,9 @@ class RegistroArtesanoForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists() or Artesano.objects.filter(email=email).exists():
-            raise forms.ValidationError('Este correo electrónico ya está registrado.')
+        if email:  # Solo validar si se proporciona un email
+            if User.objects.filter(email=email).exists() or Artesano.objects.filter(email=email).exists():
+                raise forms.ValidationError('Este correo electrónico ya está registrado.')
         return email
 
     def clean(self):
@@ -112,9 +120,10 @@ class ArtesaniaForm(forms.ModelForm):
 class EditarPerfilArtesanoForm(forms.ModelForm):
     class Meta:
         model = Artesano
-        fields = ['nombre', 'direccion', 'telefono', 'email']
+        fields = ['nombre', 'nombre_negocio', 'direccion', 'telefono', 'email']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa tu nombre completo'}),
+            'nombre_negocio': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa el nombre de tu negocio'}),
             'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Ingresa tu dirección completa'}),
             'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+52 999 999 9999'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ejemplo@correo.com'}),
