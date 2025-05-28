@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-from .models import Artesano, Artesania
+from .models import Artesano, Artesania, Carrito, ItemCarrito
 from .forms import RegistroArtesanoForm, ArtesaniaForm, EditarPerfilArtesanoForm
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
@@ -188,3 +188,51 @@ def editar_perfil(request):
     except Artesano.DoesNotExist:
         messages.error(request, 'No se encontró el perfil del artesano.')
         return redirect('app_artesanos:perfil_artesano')
+
+@login_required
+def ver_carrito(request):
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    return render(request, 'app_artesanos/carrito.html', {
+        'carrito': carrito
+    })
+
+@login_required
+def agregar_al_carrito(request, artesania_id):
+    artesania = get_object_or_404(Artesania, id=artesania_id, disponible=True)
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    
+    # Verificar si la artesanía ya está en el carrito
+    item, created = ItemCarrito.objects.get_or_create(
+        carrito=carrito,
+        artesania=artesania,
+        defaults={'cantidad': 1}
+    )
+    
+    if not created:
+        item.cantidad += 1
+        item.save()
+    
+    messages.success(request, f'¡{artesania.nombre} agregada al carrito!')
+    return redirect('app_artesanos:ver_carrito')
+
+@login_required
+def actualizar_cantidad(request, item_id):
+    item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
+    cantidad = int(request.POST.get('cantidad', 1))
+    
+    if cantidad > 0:
+        item.cantidad = cantidad
+        item.save()
+        messages.success(request, 'Cantidad actualizada')
+    else:
+        item.delete()
+        messages.success(request, 'Artículo eliminado del carrito')
+    
+    return redirect('app_artesanos:ver_carrito')
+
+@login_required
+def eliminar_del_carrito(request, item_id):
+    item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
+    item.delete()
+    messages.success(request, 'Artículo eliminado del carrito')
+    return redirect('app_artesanos:ver_carrito')

@@ -28,7 +28,17 @@
                         </li>
                         {% if user.is_authenticated %}
                             <li>
-                                <a href="{% url 'app_artesanos:perfil_artesano' %}" class="hover:underline hover:text-white">Mi Perfil</a>
+                                <a href="{% url 'app_artesanos:perfil_artesano' %}" 
+                                   class="text-white hover:text-blue-300 transition-colors">
+                                    Mi Perfil
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'app_artesanos:ver_carrito' %}" 
+                                   class="text-white hover:text-blue-300 transition-colors flex items-center gap-2">
+                                    <i class="bi bi-cart3"></i>
+                                    Carrito
+                                </a>
                             </li>
                             <li>
                                 <a href="{% url 'app_artesanos:agregar_artesania' %}" class="hover:underline hover:text-white">Agregar Artesanía</a>
@@ -57,7 +67,17 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li>
-                            <a href="{% url 'app_artesanos:perfil_artesano' %}" class="hover:underline hover:text-white">Mi Perfil</a>
+                            <a href="{% url 'app_artesanos:perfil_artesano' %}" 
+                               class="text-white hover:text-blue-300 transition-colors">
+                                Mi Perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'app_artesanos:ver_carrito' %}" 
+                               class="text-white hover:text-blue-300 transition-colors flex items-center gap-2">
+                                <i class="bi bi-cart3"></i>
+                                Carrito
+                            </a>
                         </li>
                         <li>
                             <a href="{% url 'app_artesanos:agregar_artesania' %}" class="hover:underline hover:text-white">Agregar Artesanía</a>

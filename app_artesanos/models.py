@@ -27,3 +27,28 @@ class Artesania(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Carrito(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Carrito de {self.usuario.username}"
+
+    @property
+    def total(self):
+        return sum(item.subtotal for item in self.items.all())
+
+class ItemCarrito(models.Model):
+    carrito = models.ForeignKey(Carrito, related_name='items', on_delete=models.CASCADE)
+    artesania = models.ForeignKey(Artesania, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
+    fecha_agregado = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.cantidad} x {self.artesania.nombre}"
+
+    @property
+    def subtotal(self):
+        return self.cantidad * self.artesania.precio
