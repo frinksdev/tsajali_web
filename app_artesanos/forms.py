@@ -107,4 +107,15 @@ class ArtesaniaForm(forms.ModelForm):
         if foto:
             if foto.size > 5 * 1024 * 1024:  # 5MB
                 raise forms.ValidationError('La imagen no debe superar los 5MB')
-        return foto 
+        return foto
+
+class EditarPerfilArtesanoForm(forms.ModelForm):
+    class Meta:
+        model = Artesano
+        fields = ['nombre', 'direccion', 'telefono', 'email']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa tu nombre completo'}),
+            'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Ingresa tu dirección completa'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+52 999 999 9999'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ejemplo@correo.com'}),
+        } 

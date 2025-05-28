@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from .models import Artesano, Artesania
-from .forms import RegistroArtesanoForm, ArtesaniaForm
+from .forms import RegistroArtesanoForm, ArtesaniaForm, EditarPerfilArtesanoForm
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
@@ -152,3 +152,39 @@ def detalle_artesano(request, pk):
         'artesano': artesano,
         'artesanias': artesanias
     })
+
+@login_required
+def editar_perfil(request):
+    try:
+        artesano = Artesano.objects.get(usuario=request.user)
+        if request.method == 'POST':
+            form = EditarPerfilArtesanoForm(request.POST, instance=artesano)
+            if form.is_valid():
+                # Geocodificar la nueva dirección
+                try:
+                    geolocator = Nominatim(user_agent="tsajali_app")
+                    direccion_completa = f"{form.cleaned_data['direccion']}, Veracruz, México"
+                    location = geolocator.geocode(direccion_completa)
+                    
+                    if location:
+                        artesano = form.save(commit=False)
+                        artesano.latitud = location.latitude
+                        artesano.longitud = location.longitude
+                        artesano.save()
+                        messages.success(request, '¡Perfil actualizado exitosamente!')
+                    else:
+                        messages.warning(request, 'No se pudo obtener la ubicación exacta. Por favor, verifica tu dirección.')
+                        form.save()
+                except (GeocoderTimedOut, GeocoderUnavailable) as e:
+                    messages.warning(request, 'No se pudo obtener la ubicación exacta. Por favor, verifica tu dirección.')
+                    form.save()
+                return redirect('app_artesanos:perfil_artesano')
+        else:
+            form = EditarPerfilArtesanoForm(instance=artesano)
+        return render(request, 'app_artesanos/editar_perfil.html', {
+            'form': form,
+            'artesano': artesano
+        })
+    except Artesano.DoesNotExist:
+        messages.error(request, 'No se encontró el perfil del artesano.')
+        return redirect('app_artesanos:perfil_artesano')

@@ -56,7 +56,12 @@
                                 <p class="mt-1 text-white text-lg">{{ artesano.direccion }}</p>
                             </div>
                         </div>
-                        <div class="pt-6">
+                        <div class="pt-6 space-y-4">
+                            <a href="{% url 'app_artesanos:editar_perfil' %}" 
+                               class="w-full flex justify-center items-center gap-2 rounded-full bg-yellow-400 px-6 py-3 text-base font-semibold text-white hover:bg-yellow-500 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                <i class="bi bi-pencil"></i>
+                                Editar Perfil
+                            </a>
                             <a href="{% url 'app_artesanos:agregar_artesania' %}" 
                                class="w-full flex justify-center items-center gap-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 px-6 py-3 text-base font-semibold text-white hover:from-blue-500 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl">
                                 <i class="bi bi-plus-circle"></i>

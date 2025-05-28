@@ -9,6 +9,7 @@ urlpatterns = [
     path('artesano/<int:pk>/', views.detalle_artesano, name='detalle_artesano'),
     path('registro/', views.registro_artesano, name='registro_artesano'),
     path('perfil/', views.perfil_artesano, name='perfil_artesano'),
+    path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
     path('agregar-artesania/', views.agregar_artesania, name='agregar_artesania'),
     path('editar-artesania/<int:pk>/', views.editar_artesania, name='editar_artesania'),
     path('eliminar-artesania/<int:pk>/', views.eliminar_artesania, name='eliminar_artesania'),
